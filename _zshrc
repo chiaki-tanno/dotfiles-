@@ -1,0 +1,86 @@
+PROMPT='
+[%n@%m] %F{green}%(5~,%-1~/.../%2~,%~)%f
+%F{green}%B●%b%f '
+
+setopt IGNOREEOF
+setopt share_history
+setopt histignorealldups
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+fpath=(~/.zsh/completion $fpath)
+
+autoload -Uz compinit
+compinit -u
+
+autoload -Uz colors
+colors
+zstyle ':completion:*' list-colors "${LS_COLORS}"
+
+setopt complete_in_word
+zstyle ':completion:*:default' menu select=1
+zstyle ':completion::complete:*' use-cache true
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+setopt list_packed
+
+
+autoload -Uz vcs_info
+setopt prompt_subst
+zstyle ':vcs_info:*' check-for-changes false
+zstyle ':vcs_info:*' unstagedstr "%F{red}%B＋%b%f"
+zstyle ':vcs_info:*' stagedstr "%F{yellow}* %f"
+zstyle ':vcs_info:*' formats "%u%c%F{green}[ %b ]%f"
+zstyle ':vcs_info:*' actionformats '[%b | %a]'
+precmd () { vcs_info }
+RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+
+chpwd() { ls -F --color=auto }
+
+alias ls='ls -F --color=auto'
+
+stty stop undef
+
+#
+# pyenv and pipenv
+# 
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+export PIPENV_VENV_IN_PROJECT=true
+
+#
+# Go
+#
+export PATH=$PATH:/usr/local/go/bin
+export GOHOME=~/.go
+export GOPATH=~/.go
+
+#
+# Java
+#
+export GRADLE_HOME=/opt/gradle/latest
+export PATH=${GRADLE_HOME}/bin:${PATH}
+
+#
+# tmux
+#
+[[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+export GOENV_ROOT=$HOME/.goenv
+export PATH=$GOENV_ROOT/bin:$PATH
+eval "$(goenv init -)"
+export GOENV_ROOT=$HOME/.goenv
+export PATH=$GOENV_ROOT/bin:$PATH
+eval "$(goenv init -)"
+alias ide="~/dotfiles/_ide.sh"
+
+export PATH=~/.yarn/bin:$PATH
+
+
